@@ -4,100 +4,376 @@
 
 {% block content %}
 <div class="container mt-4">
+    <!-- Header Section -->
+    <div class="row justify-content-center mb-5" data-aos="fade-down">
+        <div class="col-lg-8 text-center">
+            <div class="add-item-header">
+                <div class="header-icon mb-3">
+                    <i class="fas fa-plus-circle fa-4x text-primary"></i>
+                </div>
+                <h1 class="display-5 fw-bold text-gradient mb-3">Add New Item</h1>
+                <p class="lead text-muted">Share your clothing with the community and earn points</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Form Section -->
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <h1>Add New Item</h1>
-            <p class="lead">List your clothing item for swapping</p>
-            
-            <form action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="image" class="form-label">Main Image *</label>
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="name" class="form-label">Title *</label>
-                    <input type="text" name="name" id="name" class="form-control" required placeholder="e.g., Vintage Leather Jacket">
-                </div>
-                
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description *</label>
-                    <textarea name="description" id="description" class="form-control" rows="4" required placeholder="Describe the item, its features, and condition..."></textarea>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="category" class="form-label">Category *</label>
-                        <select name="category" id="category" class="form-select" required>
-                            <option value="">Select category...</option>
-                            {% for category in categories %}
-                            <option value="{{ category }}">{{ category.title() }}</option>
-                            {% endfor %}
-                        </select>
+            <div class="form-card bg-white rounded shadow-sm p-5" data-aos="fade-up" data-aos-delay="200">
+                <form action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data" id="add-item-form">
+                    <!-- Image Upload Section -->
+                    <div class="form-section mb-5" data-aos="fade-up" data-aos-delay="300">
+                        <div class="section-header mb-4">
+                            <h4 class="fw-bold text-dark">
+                                <i class="fas fa-camera text-primary me-2"></i>Item Photo
+                            </h4>
+                            <p class="text-muted mb-0">Upload a clear photo of your item</p>
+                        </div>
+                        
+                        <div class="image-upload-area border-2 border-dashed border-primary rounded p-4 text-center position-relative">
+                            <input type="file" name="image" id="image" class="d-none" accept="image/*" required>
+                            <div id="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                <h5 class="fw-bold text-dark mb-2">Click to upload image</h5>
+                                <p class="text-muted mb-3">or drag and drop your image here</p>
+                                <button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('image').click()">
+                                    <i class="fas fa-image me-2"></i>Choose Image
+                                </button>
+                            </div>
+                            <div id="image-preview" class="d-none">
+                                <img id="preview-img" src="" alt="Preview" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('image').click()">
+                                        <i class="fas fa-edit me-2"></i>Change Image
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="size" class="form-label">Size *</label>
-                        <select name="size" id="size" class="form-select" required>
-                            <option value="">Select size...</option>
-                            {% for size in sizes %}
-                            <option value="{{ size }}">{{ size.upper() }}</option>
-                            {% endfor %}
-                        </select>
+                    
+                    <!-- Basic Information -->
+                    <div class="form-section mb-5" data-aos="fade-up" data-aos-delay="400">
+                        <div class="section-header mb-4">
+                            <h4 class="fw-bold text-dark">
+                                <i class="fas fa-info-circle text-success me-2"></i>Basic Information
+                            </h4>
+                            <p class="text-muted mb-0">Tell us about your item</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <label for="name" class="form-label fw-semibold">
+                                    <i class="fas fa-tag me-2"></i>Item Title *
+                                </label>
+                                <input type="text" name="name" id="name" class="form-control form-control-lg" 
+                                       required placeholder="e.g., Vintage Leather Jacket"
+                                       data-aos="fade-right" data-aos-delay="500">
+                            </div>
+                            
+                            <div class="col-12 mb-4">
+                                <label for="description" class="form-label fw-semibold">
+                                    <i class="fas fa-align-left me-2"></i>Description *
+                                </label>
+                                <textarea name="description" id="description" class="form-control" rows="4" 
+                                          required placeholder="Describe the item, its features, condition, and why someone would love it..."
+                                          data-aos="fade-left" data-aos-delay="600"></textarea>
+                                <div class="form-text">
+                                    <small class="text-muted">
+                                        <span id="char-count">0</span>/500 characters
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="condition" class="form-label">Condition *</label>
-                        <select name="condition" id="condition" class="form-select" required>
-                            <option value="">Select condition...</option>
-                            {% for condition in conditions %}
-                            <option value="{{ condition }}">{{ condition.title() }}</option>
-                            {% endfor %}
-                        </select>
+                    
+                    <!-- Item Details -->
+                    <div class="form-section mb-5" data-aos="fade-up" data-aos-delay="700">
+                        <div class="section-header mb-4">
+                            <h4 class="fw-bold text-dark">
+                                <i class="fas fa-cogs text-warning me-2"></i>Item Details
+                            </h4>
+                            <p class="text-muted mb-0">Provide specific details about your item</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <label for="category" class="form-label fw-semibold">
+                                    <i class="fas fa-tags me-2"></i>Category *
+                                </label>
+                                <select name="category" id="category" class="form-select form-select-lg" required
+                                        data-aos="fade-up" data-aos-delay="800">
+                                    <option value="">Select category...</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category }}">{{ category.title() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <label for="size" class="form-label fw-semibold">
+                                    <i class="fas fa-ruler me-2"></i>Size *
+                                </label>
+                                <select name="size" id="size" class="form-select form-select-lg" required
+                                        data-aos="fade-up" data-aos-delay="900">
+                                    <option value="">Select size...</option>
+                                    {% for size in sizes %}
+                                    <option value="{{ size }}">{{ size.upper() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-4 mb-4">
+                                <label for="condition" class="form-label fw-semibold">
+                                    <i class="fas fa-star me-2"></i>Condition *
+                                </label>
+                                <select name="condition" id="condition" class="form-select form-select-lg" required
+                                        data-aos="fade-up" data-aos-delay="1000">
+                                    <option value="">Select condition...</option>
+                                    {% for condition in conditions %}
+                                    <option value="{{ condition }}">{{ condition.title() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="brand" class="form-label fw-semibold">
+                                    <i class="fas fa-copyright me-2"></i>Brand
+                                </label>
+                                <input type="text" name="brand" id="brand" class="form-control form-control-lg" 
+                                       placeholder="e.g., Nike, Zara, H&M"
+                                       data-aos="fade-right" data-aos-delay="1100">
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <label for="color" class="form-label fw-semibold">
+                                    <i class="fas fa-palette me-2"></i>Color
+                                </label>
+                                <input type="text" name="color" id="color" class="form-control form-control-lg" 
+                                       placeholder="e.g., Black, Blue, Red"
+                                       data-aos="fade-left" data-aos-delay="1200">
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="brand" class="form-label">Brand</label>
-                        <input type="text" name="brand" id="brand" class="form-control" placeholder="e.g., Nike, Zara, H&M">
+                    
+                    <!-- Points Value -->
+                    <div class="form-section mb-5" data-aos="fade-up" data-aos-delay="1300">
+                        <div class="section-header mb-4">
+                            <h4 class="fw-bold text-dark">
+                                <i class="fas fa-coins text-warning me-2"></i>Points Value
+                            </h4>
+                            <p class="text-muted mb-0">Set how many points others need to redeem your item</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="points_value" class="form-label fw-semibold">Points Required</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-warning text-dark">
+                                        <i class="fas fa-coins"></i>
+                                    </span>
+                                    <input type="number" name="points_value" id="points_value" 
+                                           class="form-control" value="10" min="1" max="100">
+                                </div>
+                                <div class="form-text">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Higher points for premium/designer items (1-100 points)
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="points-guide bg-light rounded p-3 mt-4">
+                                    <h6 class="fw-bold mb-2">
+                                        <i class="fas fa-lightbulb text-warning me-2"></i>Points Guide
+                                    </h6>
+                                    <small class="text-muted">
+                                        • Basic items: 5-15 points<br>
+                                        • Quality items: 15-30 points<br>
+                                        • Designer items: 30+ points
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="color" class="form-label">Color</label>
-                        <input type="text" name="color" id="color" class="form-control" placeholder="e.g., Black, Blue, Red">
+                    
+                    <!-- Submit Section -->
+                    <div class="submit-section text-center" data-aos="fade-up" data-aos-delay="1400">
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm submit-btn">
+                                <i class="fas fa-plus me-2"></i>Add Item to Marketplace
+                            </button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-lg px-4">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                        <p class="text-muted mt-3 small">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Your item will be reviewed and listed within 24 hours
+                        </p>
                     </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="points_value" class="form-label">Points Value</label>
-                        <input type="number" name="points_value" id="points_value" class="form-control" value="10" min="1" max="100">
-                        <small class="form-text text-muted">Points needed to redeem this item</small>
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary btn-lg">Add Item</button>
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
 <script>
-$(document).ready(function() {
-    $('#image').change(function(e) {
-        var file = e.target.files[0];
+// Enhanced add item form interactions
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    const imagePreview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    const descriptionTextarea = document.getElementById('description');
+    const charCount = document.getElementById('char-count');
+    const form = document.getElementById('add-item-form');
+    
+    // Image upload functionality
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
         if (file) {
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function(e) {
-                $('#image-preview').remove();
-                $('#image').after('<div id="image-preview" class="mt-2"><img src="' + e.target.result + '" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;"></div>');
+                previewImg.src = e.target.result;
+                uploadPlaceholder.classList.add('d-none');
+                imagePreview.classList.remove('d-none');
+                
+                // Add animation to preview
+                imagePreview.style.opacity = '0';
+                imagePreview.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    imagePreview.style.transition = 'all 0.3s ease';
+                    imagePreview.style.opacity = '1';
+                    imagePreview.style.transform = 'scale(1)';
+                }, 100);
             };
             reader.readAsDataURL(file);
         }
     });
+    
+    // Drag and drop functionality
+    const uploadArea = document.querySelector('.image-upload-area');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight(e) {
+        uploadArea.classList.add('border-success', 'bg-light');
+    }
+    
+    function unhighlight(e) {
+        uploadArea.classList.remove('border-success', 'bg-light');
+    }
+    
+    uploadArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            imageInput.files = files;
+            imageInput.dispatchEvent(new Event('change'));
+        }
+    }
+    
+    // Character counter for description
+    if (descriptionTextarea && charCount) {
+        descriptionTextarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = length;
+            
+            if (length > 450) {
+                charCount.parentElement.classList.add('text-warning');
+            } else if (length > 500) {
+                charCount.parentElement.classList.add('text-danger');
+            } else {
+                charCount.parentElement.classList.remove('text-warning', 'text-danger');
+            }
+        });
+    }
+    
+    // Form input animations
+    const formInputs = document.querySelectorAll('.form-control, .form-select');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+            this.parentElement.style.transition = 'transform 0.2s ease';
+            this.style.boxShadow = '0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Submit button animation
+    const submitBtn = document.querySelector('.submit-btn');
+    if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px) scale(1.05)';
+            this.style.boxShadow = '0 10px 25px rgba(var(--bs-primary-rgb), 0.3)';
+            this.style.transition = 'all 0.2s ease';
+        });
+        
+        submitBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '';
+        });
+    }
+    
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+        const submitButton = this.querySelector('.submit-btn');
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding Item...';
+        submitButton.disabled = true;
+        
+        // Add ripple effect
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        submitButton.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+    
+    // Points value slider visual feedback
+    const pointsInput = document.getElementById('points_value');
+    if (pointsInput) {
+        pointsInput.addEventListener('input', function() {
+            const value = parseInt(this.value);
+            const guide = document.querySelector('.points-guide');
+            
+            if (value <= 15) {
+                guide.style.borderLeft = '4px solid #28a745';
+            } else if (value <= 30) {
+                guide.style.borderLeft = '4px solid #ffc107';
+            } else {
+                guide.style.borderLeft = '4px solid #dc3545';
+            }
+            
+            guide.style.transition = 'border-left 0.3s ease';
+        });
+    }
 });
 </script>
 {% endblock %}

@@ -4,140 +4,390 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
+    <!-- Welcome Header -->
+    <div class="row mb-5" data-aos="fade-down">
         <div class="col-12">
-            <h1>Welcome back, {{ current_user.username }}!</h1>
-        </div>
-    </div>
-    
-    <!-- Profile Overview -->
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body text-center">
-                    <h4><i class="fas fa-coins me-2"></i>{{ current_user.points_balance }}</h4>
-                    <p class="card-text">Points Balance</p>
+            <div class="welcome-header bg-gradient-primary rounded p-4 text-white position-relative overflow-hidden">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="display-5 fw-bold mb-2">Welcome back, {{ current_user.username }}! 👋</h1>
+                        <p class="lead mb-0 opacity-90">Ready to swap some amazing clothing items today?</p>
+                    </div>
+                    <div class="col-lg-4 text-end">
+                        <div class="welcome-avatar">
+                            <div class="avatar-large bg-white bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center">
+                                <i class="fas fa-user fa-3x text-white"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-success text-white">
-                <div class="card-body text-center">
-                    <h4><i class="fas fa-tshirt me-2"></i>{{ current_user.items|length }}</h4>
-                    <p class="card-text">Items Listed</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-warning text-white">
-                <div class="card-body text-center">
-                    <h4><i class="fas fa-exchange-alt me-2"></i>{{ current_user.sent_requests|length }}</h4>
-                    <p class="card-text">Requests Sent</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card bg-info text-white">
-                <div class="card-body text-center">
-                    <h4><i class="fas fa-inbox me-2"></i>{{ current_user.received_requests|length }}</h4>
-                    <p class="card-text">Requests Received</p>
+                <!-- Decorative elements -->
+                <div class="position-absolute top-0 end-0 opacity-10">
+                    <i class="fas fa-tshirt" style="font-size: 8rem;"></i>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Quick Actions -->
-    <div class="row mb-4">
+    <!-- Enhanced Stats Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-card bg-white rounded shadow-sm p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-coins fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1 counter" data-target="{{ current_user.points_balance }}">0</h3>
+                        <p class="text-muted mb-0">Points Balance</p>
+                    </div>
+                </div>
+                <div class="stat-progress mt-3">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-primary" style="width: {{ (current_user.points_balance / 1000 * 100) if current_user.points_balance < 1000 else 100 }}%"></div>
+                    </div>
+                </div>
+                <div class="stat-decoration position-absolute bottom-0 end-0 opacity-5">
+                    <i class="fas fa-coins fa-3x"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-card bg-white rounded shadow-sm p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-tshirt fa-2x text-success"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1 counter" data-target="{{ current_user.items|length }}">0</h3>
+                        <p class="text-muted mb-0">Items Listed</p>
+                    </div>
+                </div>
+                <div class="stat-progress mt-3">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-success" style="width: {{ (current_user.items|length / 10 * 100) if current_user.items|length < 10 else 100 }}%"></div>
+                    </div>
+                </div>
+                <div class="stat-decoration position-absolute bottom-0 end-0 opacity-5">
+                    <i class="fas fa-tshirt fa-3x"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-card bg-white rounded shadow-sm p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-paper-plane fa-2x text-warning"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1 counter" data-target="{{ current_user.sent_requests|length }}">0</h3>
+                        <p class="text-muted mb-0">Requests Sent</p>
+                    </div>
+                </div>
+                <div class="stat-progress mt-3">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-warning" style="width: {{ (current_user.sent_requests|length / 20 * 100) if current_user.sent_requests|length < 20 else 100 }}%"></div>
+                    </div>
+                </div>
+                <div class="stat-decoration position-absolute bottom-0 end-0 opacity-5">
+                    <i class="fas fa-paper-plane fa-3x"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="stat-card bg-white rounded shadow-sm p-4 h-100 position-relative overflow-hidden">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-info bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-inbox fa-2x text-info"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-1 counter" data-target="{{ current_user.received_requests|length }}">0</h3>
+                        <p class="text-muted mb-0">Requests Received</p>
+                    </div>
+                </div>
+                <div class="stat-progress mt-3">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" style="width: {{ (current_user.received_requests|length / 20 * 100) if current_user.received_requests|length < 20 else 100 }}%"></div>
+                    </div>
+                </div>
+                <div class="stat-decoration position-absolute bottom-0 end-0 opacity-5">
+                    <i class="fas fa-inbox fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Enhanced Quick Actions -->
+    <div class="row mb-5" data-aos="fade-up" data-aos-delay="500">
         <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Quick Actions</h5>
-                    <a href="{{ url_for('add_item') }}" class="btn btn-primary me-2">
-                        <i class="fas fa-plus me-1"></i>Add New Item
-                    </a>
-                    <a href="{{ url_for('browse') }}" class="btn btn-outline-primary me-2">
-                        <i class="fas fa-search me-1"></i>Browse Items
-                    </a>
-                    <a href="{{ url_for('my_requests') }}" class="btn btn-outline-warning">
-                        <i class="fas fa-envelope me-1"></i>My Requests
-                    </a>
+            <div class="quick-actions-card bg-white rounded shadow-sm p-4">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-bolt text-warning me-2"></i>Quick Actions
+                        </h5>
+                        <p class="text-muted mb-0">Get started with your clothing swap journey</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="d-flex gap-3 justify-content-lg-end justify-content-start flex-wrap">
+                            <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-lg shadow-sm action-btn">
+                                <i class="fas fa-plus me-2"></i>Add New Item
+                            </a>
+                            <a href="{{ url_for('browse') }}" class="btn btn-outline-primary btn-lg action-btn">
+                                <i class="fas fa-search me-2"></i>Browse Items
+                            </a>
+                            <a href="{{ url_for('my_requests') }}" class="btn btn-outline-warning btn-lg action-btn">
+                                <i class="fas fa-envelope me-2"></i>My Requests
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Recent Items -->
+    <!-- Enhanced Content Sections -->
     <div class="row">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">My Recent Items</h5>
-                    <a href="{{ url_for('browse') }}?owner={{ current_user.id }}" class="btn btn-sm btn-outline-primary">View All</a>
+        <!-- My Recent Items -->
+        <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+            <div class="content-card bg-white rounded shadow-sm h-100">
+                <div class="card-header bg-transparent border-0 p-4 pb-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-tshirt text-success me-2"></i>My Recent Items
+                        </h5>
+                        <a href="{{ url_for('browse') }}?owner={{ current_user.id }}" 
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-arrow-right me-1"></i>View All
+                        </a>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% if my_items %}
                         {% for item in my_items %}
-                        <div class="d-flex align-items-center mb-3">
+                        <div class="item-row d-flex align-items-center p-3 rounded mb-3 bg-light bg-opacity-50 position-relative overflow-hidden">
                             {% if item.image_filename %}
-                            <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ item.name }}">
+                            <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" 
+                                 class="item-thumbnail rounded shadow-sm me-3" 
+                                 style="width: 60px; height: 60px; object-fit: cover;" 
+                                 alt="{{ item.name }}">
                             {% else %}
-                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <div class="item-placeholder bg-white rounded shadow-sm me-3 d-flex align-items-center justify-content-center" 
+                                 style="width: 60px; height: 60px;">
                                 <i class="fas fa-image text-muted"></i>
                             </div>
                             {% endif %}
                             <div class="flex-grow-1">
-                                <h6 class="mb-1">{{ item.name }}</h6>
-                                <small class="text-muted">
-                                    <span class="badge bg-{{ 'success' if item.state == 'available' else 'warning' if item.state == 'reserved' else 'secondary' }}">
+                                <h6 class="fw-bold mb-1">{{ item.name }}</h6>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-{{ 'success' if item.state == 'available' else 'warning' if item.state == 'reserved' else 'secondary' }} badge-status">
                                         {{ item.state.title() }}
                                     </span>
-                                </small>
+                                    <span class="text-muted small">{{ item.category.title() }}</span>
+                                </div>
                             </div>
-                            <span class="text-warning fw-bold">{{ item.points_value }}pts</span>
+                            <div class="points-badge">
+                                <span class="fw-bold text-warning">
+                                    <i class="fas fa-coins me-1"></i>{{ item.points_value }}
+                                </span>
+                            </div>
                         </div>
                         {% endfor %}
                     {% else %}
-                        <p class="text-muted">No items yet. <a href="{{ url_for('add_item') }}">Add your first item!</a></p>
+                        <div class="empty-state text-center py-4">
+                            <i class="fas fa-plus-circle fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No items yet</h6>
+                            <p class="text-muted small mb-3">Start your clothing swap journey by adding your first item</p>
+                            <a href="{{ url_for('add_item') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus me-1"></i>Add Your First Item
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
         
         <!-- Recent Requests -->
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Recent Requests</h5>
-                    <a href="{{ url_for('my_requests') }}" class="btn btn-sm btn-outline-primary">View All</a>
+        <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="700">
+            <div class="content-card bg-white rounded shadow-sm h-100">
+                <div class="card-header bg-transparent border-0 p-4 pb-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">
+                            <i class="fas fa-exchange-alt text-info me-2"></i>Recent Requests
+                        </h5>
+                        <a href="{{ url_for('my_requests') }}" 
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-arrow-right me-1"></i>View All
+                        </a>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% if my_requests %}
                         {% for request in my_requests %}
-                        <div class="d-flex align-items-center mb-3">
+                        <div class="request-row d-flex align-items-center p-3 rounded mb-3 bg-light bg-opacity-50 position-relative">
                             {% if request.item.image_filename %}
-                            <img src="{{ url_for('static', filename='uploads/' + request.item.image_filename) }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ request.item.name }}">
+                            <img src="{{ url_for('static', filename='uploads/' + request.item.image_filename) }}" 
+                                 class="item-thumbnail rounded shadow-sm me-3" 
+                                 style="width: 60px; height: 60px; object-fit: cover;" 
+                                 alt="{{ request.item.name }}">
                             {% else %}
-                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                            <div class="item-placeholder bg-white rounded shadow-sm me-3 d-flex align-items-center justify-content-center" 
+                                 style="width: 60px; height: 60px;">
                                 <i class="fas fa-image text-muted"></i>
                             </div>
                             {% endif %}
                             <div class="flex-grow-1">
-                                <h6 class="mb-1">{{ request.item.name }}</h6>
+                                <h6 class="fw-bold mb-1">{{ request.item.name }}</h6>
                                 <small class="text-muted">
-                                    To: {{ request.item_owner.username }}
+                                    <i class="fas fa-user me-1"></i>To: {{ request.item_owner.username }}
                                 </small>
                             </div>
-                            <span class="badge bg-{{ 'success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary' }}">
+                            <span class="badge bg-{{ 'success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary' }} badge-status">
                                 {{ request.state.title() }}
                             </span>
                         </div>
                         {% endfor %}
                     {% else %}
-                        <p class="text-muted">No requests yet. <a href="{{ url_for('browse') }}">Start browsing items!</a></p>
+                        <div class="empty-state text-center py-4">
+                            <i class="fas fa-search-plus fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No requests yet</h6>
+                            <p class="text-muted small mb-3">Discover amazing items and start making swap requests</p>
+                            <a href="{{ url_for('browse') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-search me-1"></i>Start Browsing
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Enhanced dashboard animations and interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter animation for stats
+    const counters = document.querySelectorAll('.counter');
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const duration = 2000; // 2 seconds
+            const step = target / (duration / 16); // 60fps
+            let current = 0;
+            
+            const updateCounter = () => {
+                current += step;
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+            
+            updateCounter();
+        });
+    };
+    
+    // Trigger counter animation when stats come into view
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounters();
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    });
+    
+    const statsSection = document.querySelector('.row .stat-card');
+    if (statsSection) {
+        statsObserver.observe(statsSection);
+    }
+    
+    // Stat card hover effects
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+            this.style.boxShadow = '0 15px 35px rgba(0,0,0,0.1)';
+            this.style.transition = 'all 0.3s ease';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '';
+            this.style.transition = 'all 0.3s ease';
+        });
+    });
+    
+    // Action button hover effects
+    const actionBtns = document.querySelectorAll('.action-btn');
+    actionBtns.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)';
+            this.style.transition = 'all 0.2s ease';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '';
+            this.style.transition = 'all 0.2s ease';
+        });
+    });
+    
+    // Item row and request row hover effects
+    const rows = document.querySelectorAll('.item-row, .request-row');
+    rows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+            this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.08)';
+            this.style.transition = 'all 0.2s ease';
+            this.style.backgroundColor = 'rgba(var(--bs-primary-rgb), 0.05)';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+            this.style.boxShadow = '';
+            this.style.transition = 'all 0.2s ease';
+            this.style.backgroundColor = '';
+        });
+    });
+    
+    // Badge animations
+    const badges = document.querySelectorAll('.badge-status');
+    badges.forEach(badge => {
+        badge.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+        
+        badge.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.transition = 'transform 0.2s ease';
+        });
+    });
+    
+    // Points badge animations
+    const pointsBadges = document.querySelectorAll('.points-badge');
+    pointsBadges.forEach(badge => {
+        badge.addEventListener('mouseenter', function() {
+            const coinsIcon = this.querySelector('.fas.fa-coins');
+            if (coinsIcon) {
+                coinsIcon.style.animation = 'bounce 0.6s ease-in-out';
+            }
+        });
+        
+        badge.addEventListener('mouseleave', function() {
+            const coinsIcon = this.querySelector('.fas.fa-coins');
+            if (coinsIcon) {
+                coinsIcon.style.animation = '';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -2,22 +2,36 @@
 
 {% block content %}
 <!-- Hero Section with Images -->
-<section class="hero-section py-5">
+<section class="hero-section py-5" data-aos="fade-in">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center mb-4">
+            <div class="col-12 text-center mb-4" data-aos="fade-up" data-aos-delay="200">
                 <h1 class="display-4 fw-bold text-white mb-4">Swap Your Style, Save the Planet</h1>
                 <p class="lead text-white mb-4">Join our community of fashion-conscious individuals who believe in sustainable style.</p>
+                <div class="hero-stats d-flex justify-content-center gap-4 mb-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-item text-center">
+                        <div class="stat-number h2 fw-bold">{{ total_items }}+</div>
+                        <div class="stat-label">Items Available</div>
+                    </div>
+                    <div class="stat-item text-center">
+                        <div class="stat-number h2 fw-bold">{{ total_users }}+</div>
+                        <div class="stat-label">Happy Users</div>
+                    </div>
+                    <div class="stat-item text-center">
+                        <div class="stat-number h2 fw-bold">{{ total_swaps }}+</div>
+                        <div class="stat-label">Successful Swaps</div>
+                    </div>
+                </div>
             </div>
         </div>
         
         <!-- Hero Images Section -->
         <div class="row">
-            <div class="col-12">
+            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
                 <div class="hero-images-container bg-white rounded p-4 shadow-lg">
                     <div class="row g-3">
                         {% for item in featured_items[:6] %}
-                        <div class="col-lg-2 col-md-4 col-6">
+                        <div class="col-lg-2 col-md-4 col-6" data-aos="zoom-in" data-aos-delay="{{ 700 + loop.index * 100 }}">
                             <div class="hero-image-card">
                                 {% if item.image_filename %}
                                 <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ item.name }}" style="height: 120px; width: 100%; object-fit: cover;">
@@ -27,7 +41,8 @@
                                 </div>
                                 {% endif %}
                                 <div class="text-center mt-2">
-                                    <small class="text-muted">{{ item.name[:15] }}...</small>
+                                    <small class="text-muted fw-semibold">{{ item.name[:15] }}...</small>
+                                    <div class="text-primary small">{{ item.points_value }} pts</div>
                                 </div>
                             </div>
                         </div>
@@ -35,7 +50,7 @@
                         
                         <!-- Fill remaining slots if fewer than 6 items -->
                         {% for i in range(6 - featured_items|length) %}
-                        <div class="col-lg-2 col-md-4 col-6">
+                        <div class="col-lg-2 col-md-4 col-6" data-aos="zoom-in" data-aos-delay="{{ 700 + (featured_items|length + loop.index) * 100 }}">
                             <div class="hero-image-card">
                                 <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px;">
                                     <i class="fas fa-plus fa-2x text-muted"></i>
@@ -54,68 +69,40 @@
 </section>
 
 <!-- Categories Section -->
-<section class="categories-section py-5 bg-light">
+<section class="categories-section py-5 bg-light" data-aos="fade-up">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center mb-4">
-                <h2 class="fw-bold">Categories Section</h2>
+            <div class="col-12 text-center mb-5" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="fw-bold display-6 mb-3">Browse by Category</h2>
+                <p class="text-muted lead">Discover amazing clothing items in every category</p>
             </div>
         </div>
-        <div class="row g-3">
-            <div class="col-lg-4 col-md-6">
-                <a href="{{ url_for('browse', category='tops') }}" class="text-decoration-none">
-                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
-                        <i class="fas fa-tshirt fa-3x text-primary mb-3"></i>
-                        <h5 class="fw-bold text-dark">Tops</h5>
-                        <p class="text-muted mb-0">Shirts, Blouses, T-shirts</p>
+        <div class="row g-4">
+            {% set categories_data = [
+                {'name': 'tops', 'icon': 'fas fa-tshirt', 'color': 'primary', 'title': 'Tops', 'desc': 'Shirts, Blouses, T-shirts'},
+                {'name': 'bottoms', 'icon': 'fas fa-user-tie', 'color': 'success', 'title': 'Bottoms', 'desc': 'Pants, Jeans, Shorts'},
+                {'name': 'dresses', 'icon': 'fas fa-female', 'color': 'warning', 'title': 'Dresses', 'desc': 'Casual, Formal, Party'},
+                {'name': 'outerwear', 'icon': 'fas fa-coat-arms', 'color': 'info', 'title': 'Outerwear', 'desc': 'Jackets, Coats, Hoodies'},
+                {'name': 'shoes', 'icon': 'fas fa-shoe-prints', 'color': 'danger', 'title': 'Shoes', 'desc': 'Sneakers, Boots, Heels'},
+                {'name': 'accessories', 'icon': 'fas fa-gem', 'color': 'purple', 'title': 'Accessories', 'desc': 'Bags, Jewelry, Hats'}
+            ] %}
+            
+            {% for category in categories_data %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ 300 + loop.index * 100 }}">
+                <a href="{{ url_for('browse', category=category.name) }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center position-relative overflow-hidden">
+                        <div class="category-icon-wrapper mb-3">
+                            <i class="{{ category.icon }} fa-3x text-{{ category.color }}"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-2">{{ category.title }}</h5>
+                        <p class="text-muted mb-0">{{ category.desc }}</p>
+                        <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                            <i class="fas fa-arrow-right fa-2x text-white"></i>
+                        </div>
                     </div>
                 </a>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <a href="{{ url_for('browse', category='bottoms') }}" class="text-decoration-none">
-                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
-                        <i class="fas fa-user-tie fa-3x text-success mb-3"></i>
-                        <h5 class="fw-bold text-dark">Bottoms</h5>
-                        <p class="text-muted mb-0">Pants, Jeans, Shorts</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <a href="{{ url_for('browse', category='dresses') }}" class="text-decoration-none">
-                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
-                        <i class="fas fa-female fa-3x text-warning mb-3"></i>
-                        <h5 class="fw-bold text-dark">Dresses</h5>
-                        <p class="text-muted mb-0">Casual, Formal, Party</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <a href="{{ url_for('browse', category='outerwear') }}" class="text-decoration-none">
-                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
-                        <i class="fas fa-coat-arms fa-3x text-info mb-3"></i>
-                        <h5 class="fw-bold text-dark">Outerwear</h5>
-                        <p class="text-muted mb-0">Jackets, Coats, Hoodies</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <a href="{{ url_for('browse', category='shoes') }}" class="text-decoration-none">
-                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
-                        <i class="fas fa-shoe-prints fa-3x text-danger mb-3"></i>
-                        <h5 class="fw-bold text-dark">Shoes</h5>
-                        <p class="text-muted mb-0">Sneakers, Boots, Heels</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <a href="{{ url_for('browse', category='accessories') }}" class="text-decoration-none">
-                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
-                        <i class="fas fa-gem fa-3x text-purple mb-3"></i>
-                        <h5 class="fw-bold text-dark">Accessories</h5>
-                        <p class="text-muted mb-0">Bags, Jewelry, Hats</p>
-                    </div>
-                </a>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
