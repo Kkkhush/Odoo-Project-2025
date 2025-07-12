@@ -2,6 +2,20 @@
 
 A comprehensive clothing swap platform built with Flask (demo) and a full Odoo module implementation. This project enables users to exchange clothing items through a points-based system or direct swaps, promoting sustainable fashion.
 
+## Problem Statement
+  - ** ReWear – Community Clothing Exchange
+  - 
+## Team Members 
+   - ** Khushi Choudhary
+   - ** Khushi Dutta
+   - ** Harman Kaur
+
+## Mail id of team members
+- kkhushichoudharyy036@gmail.com
+- khushidutta082004@gmail.com
+- harmankaur1415@gmail.com
+
+  
 ## 🌟 Features
 
 ### 🔥 Core Features
@@ -208,20 +222,7 @@ optimize_database()
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Bootstrap 5 for responsive design
-- FontAwesome for icons
-- Flask community for excellent documentation
-- Odoo community for framework support
-
-## 📞 Support
-
-For support, email your-email@example.com or create an issue in this repository.
 
 ---
 
