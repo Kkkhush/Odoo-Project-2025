@@ -3,7 +3,7 @@
 A comprehensive clothing swap platform built with Flask (demo) and a full Odoo module implementation. This project enables users to exchange clothing items through a points-based system or direct swaps, promoting sustainable fashion.
 
 ## Problem Statement
-  - ** ReWear – Community Clothing Exchange
+  - ReWear – Community Clothing Exchange
 
 ## Team Members 
    - Khushi Choudhary
