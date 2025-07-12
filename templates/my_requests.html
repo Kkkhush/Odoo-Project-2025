@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}My Requests - Clothing Swap Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>My Requests</h1>
+    
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sent-requests" type="button">
+                Sent Requests ({{ sent_requests|length }})
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#received-requests" type="button">
+                Received Requests ({{ received_requests|length }})
+            </button>
+        </li>
+    </ul>
+    
+    <!-- Tab content -->
+    <div class="tab-content">
+        
+        <!-- Sent Requests -->
+        <div class="tab-pane fade show active" id="sent-requests">
+            {% for request in sent_requests %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            {% if request.item.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + request.item.image_filename) }}" class="img-fluid rounded" alt="{{ request.item.name }}">
+                            {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                <i class="fas fa-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <h5>{{ request.item.name }}</h5>
+                            <p class="text-muted">Owner: {{ request.item_owner.username }}</p>
+                            <p class="mb-1">
+                                Type: <span class="badge bg-info">{{ request.request_type.title() }}</span>
+                                {% if request.request_type == 'points' %}
+                                - {{ request.points_used }} points
+                                {% endif %}
+                            </p>
+                            {% if request.message %}
+                            <p class="small"><strong>Message:</strong> {{ request.message }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-{{ 'success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary' }}">
+                                {{ request.state.title() }}
+                            </span>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-muted">
+                                {{ request.created_at.strftime('%Y-%m-%d') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if not sent_requests %}
+            <div class="text-center py-5">
+                <h4>No requests sent yet</h4>
+                <p class="text-muted">Browse items and start requesting!</p>
+                <a href="{{ url_for('browse') }}" class="btn btn-primary">Browse Items</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Received Requests -->
+        <div class="tab-pane fade" id="received-requests">
+            {% for request in received_requests %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            {% if request.item.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + request.item.image_filename) }}" class="img-fluid rounded" alt="{{ request.item.name }}">
+                            {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                <i class="fas fa-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-5">
+                            <h5>{{ request.item.name }}</h5>
+                            <p class="text-muted">From: {{ request.requester.username }}</p>
+                            <p class="mb-1">
+                                Type: <span class="badge bg-info">{{ request.request_type.title() }}</span>
+                                {% if request.request_type == 'points' %}
+                                - {{ request.points_used }} points
+                                {% endif %}
+                            </p>
+                            {% if request.message %}
+                            <p class="small"><strong>Message:</strong> {{ request.message }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-{{ 'success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary' }}">
+                                {{ request.state.title() }}
+                            </span>
+                        </div>
+                        <div class="col-md-3">
+                            {% if request.state == 'pending' %}
+                            <div class="d-flex gap-2">
+                                <a href="{{ url_for('accept_request', request_id=request.id) }}" class="btn btn-success btn-sm" onclick="return confirm('Accept this request?')">Accept</a>
+                                <a href="{{ url_for('reject_request', request_id=request.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Reject this request?')">Reject</a>
+                            </div>
+                            {% endif %}
+                            <small class="text-muted d-block mt-1">
+                                {{ request.created_at.strftime('%Y-%m-%d') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if not received_requests %}
+            <div class="text-center py-5">
+                <h4>No requests received yet</h4>
+                <p class="text-muted">Add more items to receive swap requests!</p>
+                <a href="{{ url_for('add_item') }}" class="btn btn-primary">Add New Item</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

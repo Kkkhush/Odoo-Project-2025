@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.name }} - Clothing Swap Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            {% if item.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ item.name }}">
+            {% else %}
+            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <i class="fas fa-image fa-5x text-muted"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h1>{{ item.name }}</h1>
+            <p class="lead">{{ item.description }}</p>
+            
+            <div class="row mb-3">
+                <div class="col-6">
+                    <strong>Category:</strong> <span class="badge bg-primary">{{ item.category.title() }}</span>
+                </div>
+                <div class="col-6">
+                    <strong>Size:</strong> <span class="badge bg-secondary">{{ item.size.upper() }}</span>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-6">
+                    <strong>Condition:</strong> <span class="badge bg-success">{{ item.condition.title() }}</span>
+                </div>
+                <div class="col-6">
+                    <strong>Points Value:</strong> <span class="text-warning fw-bold">{{ item.points_value }} points</span>
+                </div>
+            </div>
+            
+            {% if item.brand %}
+            <p><strong>Brand:</strong> {{ item.brand }}</p>
+            {% endif %}
+            {% if item.color %}
+            <p><strong>Color:</strong> {{ item.color }}</p>
+            {% endif %}
+            
+            <div class="mb-3">
+                <strong>Owner:</strong> {{ item.owner.username }}
+            </div>
+            
+            {% if can_request %}
+            <div class="mt-4">
+                <h5>Request This Item</h5>
+                
+                <!-- Swap Request Form -->
+                <form action="{{ url_for('request_item') }}" method="post" id="requestForm">
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Request Type:</label>
+                        <div>
+                            <input type="radio" name="request_type" value="swap" id="type_swap" checked>
+                            <label for="type_swap" class="form-check-label me-3">Item Swap</label>
+                            
+                            <input type="radio" name="request_type" value="points" id="type_points">
+                            <label for="type_points" class="form-check-label">Points Redemption</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Swap Option -->
+                    <div id="swap_section" class="mb-3">
+                        <label for="offered_item_id" class="form-label">Offer Your Item:</label>
+                        <select name="offered_item_id" id="offered_item_id" class="form-select">
+                            <option value="">Select an item to offer...</option>
+                            {% for user_item in user_items %}
+                            <option value="{{ user_item.id }}">
+                                {{ user_item.name }} ({{ user_item.size.upper() }}, {{ user_item.condition.title() }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Points Option -->
+                    <div id="points_section" class="mb-3" style="display: none;">
+                        <label for="points_used" class="form-label">Points to Use:</label>
+                        <input type="number" name="points_used" id="points_used" class="form-control" value="{{ item.points_value }}" max="{{ item.points_value }}">
+                        <small class="form-text text-muted">
+                            Your balance: {{ current_user.points_balance }} points
+                        </small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message (optional):</label>
+                        <textarea name="message" id="message" class="form-control" rows="3" placeholder="Add a personal message..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Send Request</button>
+                </form>
+            </div>
+            {% elif current_user.is_authenticated and current_user.id == item.owner_id %}
+            <div class="alert alert-info mt-4">
+                This is your own item.
+            </div>
+            {% elif not current_user.is_authenticated %}
+            <div class="alert alert-warning mt-4">
+                Please <a href="{{ url_for('login') }}">login</a> to request this item.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('input[name="request_type"]').change(function() {
+        var requestType = $(this).val();
+        if (requestType === 'swap') {
+            $('#swap_section').show();
+            $('#points_section').hide();
+            $('#offered_item_id').prop('required', true);
+            $('#points_used').prop('required', false);
+        } else if (requestType === 'points') {
+            $('#swap_section').hide();
+            $('#points_section').show();
+            $('#offered_item_id').prop('required', false);
+            $('#points_used').prop('required', true);
+        }
+    });
+    
+    $('#requestForm').submit(function(e) {
+        var requestType = $('input[name="request_type"]:checked').val();
+        
+        if (requestType === 'swap') {
+            var offeredItemId = $('#offered_item_id').val();
+            if (!offeredItemId) {
+                e.preventDefault();
+                alert('Please select an item to offer for swap.');
+                return false;
+            }
+        } else if (requestType === 'points') {
+            var pointsUsed = parseInt($('#points_used').val());
+            var userBalance = {{ current_user.points_balance if current_user.is_authenticated else 0 }};
+            
+            if (pointsUsed > userBalance) {
+                e.preventDefault();
+                alert('You don\'t have enough points for this redemption.');
+                return false;
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

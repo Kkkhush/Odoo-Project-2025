@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- User Dashboard -->
+        <template id="my_dashboard" name="My Dashboard">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <h1>My Dashboard</h1>
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Overview -->
+                        <div class="row mb-4">
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h4><t t-esc="user_profile.points_balance"/></h4>
+                                        <p class="card-text">Points Balance</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h4><t t-esc="user_profile.total_items_listed"/></h4>
+                                        <p class="card-text">Items Listed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h4><t t-esc="user_profile.total_swaps_completed"/></h4>
+                                        <p class="card-text">Swaps Completed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h4><t t-esc="user_profile.total_points_earned"/></h4>
+                                        <p class="card-text">Total Points Earned</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Quick Actions</h5>
+                                        <a href="/add-item" class="btn btn-primary me-2">Add New Item</a>
+                                        <a href="/browse" class="btn btn-outline-primary me-2">Browse Items</a>
+                                        <a href="/my/items" class="btn btn-outline-secondary me-2">My Items</a>
+                                        <a href="/my/requests" class="btn btn-outline-warning">My Requests</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Items -->
+                        <div class="row mb-4">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">My Recent Items</h5>
+                                        <a href="/my/items" class="btn btn-sm btn-outline-primary">View All</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <t t-if="my_items">
+                                            <t t-foreach="my_items" t-as="item">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <img t-att-src="'/web/image/clothing.item/%s/image_128' % item.id" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt=""/>
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="mb-1"><t t-esc="item.name"/></h6>
+                                                        <small class="text-muted">
+                                                            <span t-att-class="'badge bg-' + ('success' if item.state == 'available' else 'warning' if item.state == 'pending' else 'secondary')">
+                                                                <t t-esc="item.state"/>
+                                                            </span>
+                                                        </small>
+                                                    </div>
+                                                    <span class="text-warning fw-bold"><t t-esc="item.points_value"/>pts</span>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-if="not my_items">
+                                            <p class="text-muted">No items yet. <a href="/add-item">Add your first item!</a></p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Requests -->
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Recent Requests</h5>
+                                        <a href="/my/requests" class="btn btn-sm btn-outline-primary">View All</a>
+                                    </div>
+                                    <div class="card-body">
+                                        <t t-if="my_requests">
+                                            <t t-foreach="my_requests" t-as="request">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <img t-att-src="'/web/image/clothing.item/%s/image_128' % request.item_id.id" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt=""/>
+                                                    <div class="flex-grow-1">
+                                                        <h6 class="mb-1"><t t-esc="request.item_id.name"/></h6>
+                                                        <small class="text-muted">
+                                                            <t t-if="request.requester_id.id == request.env.user.id">
+                                                                Requested from <t t-esc="request.owner_id.name"/>
+                                                            </t>
+                                                            <t t-if="request.owner_id.id == request.env.user.id">
+                                                                Request from <t t-esc="request.requester_id.name"/>
+                                                            </t>
+                                                        </small>
+                                                    </div>
+                                                    <span t-att-class="'badge bg-' + ('success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'secondary')">
+                                                        <t t-esc="request.state"/>
+                                                    </span>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-if="not my_requests">
+                                            <p class="text-muted">No requests yet. <a href="/browse">Start browsing items!</a></p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+        <!-- My Items Page -->
+        <template id="my_items" name="My Items">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+                                <h1>My Items</h1>
+                                <a href="/add-item" class="btn btn-primary">Add New Item</a>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <t t-foreach="items" t-as="item">
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="card">
+                                        <img t-att-src="'/web/image/clothing.item/%s/image_128' % item.id" class="card-img-top" style="height: 200px; object-fit: cover;" alt=""/>
+                                        <div class="card-body">
+                                            <h5 class="card-title"><t t-esc="item.name"/></h5>
+                                            <p class="card-text"><t t-esc="item.description[:80]"/>...</p>
+                                            <div class="mb-2">
+                                                <span class="badge bg-primary me-1"><t t-esc="item.category"/></span>
+                                                <span class="badge bg-secondary me-1"><t t-esc="item.size"/></span>
+                                                <span t-att-class="'badge me-1 bg-' + ('success' if item.state == 'available' else 'warning' if item.state == 'pending' else 'info' if item.state == 'reserved' else 'secondary')">
+                                                    <t t-esc="item.state"/>
+                                                </span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-warning fw-bold"><t t-esc="item.points_value"/> points</span>
+                                                <div>
+                                                    <a t-att-href="'/item/%s' % item.id" class="btn btn-outline-primary btn-sm">View</a>
+                                                    <t t-if="item.swap_request_count > 0">
+                                                        <span class="badge bg-warning ms-1"><t t-esc="item.swap_request_count"/> requests</span>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                            
+                            <t t-if="not items">
+                                <div class="col-12">
+                                    <div class="text-center py-5">
+                                        <h3>No items yet</h3>
+                                        <p class="text-muted">Start by adding your first item to the swap community!</p>
+                                        <a href="/add-item" class="btn btn-primary btn-lg">Add Your First Item</a>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+        <!-- My Requests Page -->
+        <template id="my_requests" name="My Requests">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container mt-4">
+                        <h1>My Requests</h1>
+                        
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs mb-4" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sent-requests" type="button">
+                                    Sent Requests (<t t-esc="len(sent_requests)"/>)
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#received-requests" type="button">
+                                    Received Requests (<t t-esc="len(received_requests)"/>)
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Tab content -->
+                        <div class="tab-content">
+                            
+                            <!-- Sent Requests -->
+                            <div class="tab-pane fade show active" id="sent-requests">
+                                <t t-foreach="sent_requests" t-as="request">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-2">
+                                                    <img t-att-src="'/web/image/clothing.item/%s/image_128' % request.item_id.id" class="img-fluid rounded" alt=""/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5><t t-esc="request.item_id.name"/></h5>
+                                                    <p class="text-muted">Owner: <t t-esc="request.owner_id.name"/></p>
+                                                    <p class="mb-1">
+                                                        Type: <span class="badge bg-info"><t t-esc="request.request_type"/></span>
+                                                    </p>
+                                                    <t t-if="request.message">
+                                                        <p class="small"><strong>Message:</strong> <t t-esc="request.message"/></p>
+                                                    </t>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <span t-att-class="'badge bg-' + ('success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary')">
+                                                        <t t-esc="request.state"/>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <small class="text-muted">
+                                                        <t t-esc="request.request_date.strftime('%Y-%m-%d')"/>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <t t-if="not sent_requests">
+                                    <div class="text-center py-5">
+                                        <h4>No requests sent yet</h4>
+                                        <p class="text-muted">Browse items and start requesting!</p>
+                                        <a href="/browse" class="btn btn-primary">Browse Items</a>
+                                    </div>
+                                </t>
+                            </div>
+                            
+                            <!-- Received Requests -->
+                            <div class="tab-pane fade" id="received-requests">
+                                <t t-foreach="received_requests" t-as="request">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-2">
+                                                    <img t-att-src="'/web/image/clothing.item/%s/image_128' % request.item_id.id" class="img-fluid rounded" alt=""/>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <h5><t t-esc="request.item_id.name"/></h5>
+                                                    <p class="text-muted">From: <t t-esc="request.requester_id.name"/></p>
+                                                    <p class="mb-1">
+                                                        Type: <span class="badge bg-info"><t t-esc="request.request_type"/></span>
+                                                        <t t-if="request.request_type == 'points'">
+                                                            - <t t-esc="request.points_used"/> points
+                                                        </t>
+                                                    </p>
+                                                    <t t-if="request.message">
+                                                        <p class="small"><strong>Message:</strong> <t t-esc="request.message"/></p>
+                                                    </t>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <span t-att-class="'badge bg-' + ('success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary')">
+                                                        <t t-esc="request.state"/>
+                                                    </span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <t t-if="request.state == 'pending'">
+                                                        <form method="post" class="d-inline">
+                                                            <a t-att-href="'/my/request/%s/accept' % request.id" class="btn btn-success btn-sm" onclick="return confirm('Accept this request?')">Accept</a>
+                                                            <a t-att-href="'/my/request/%s/reject' % request.id" class="btn btn-danger btn-sm" onclick="return confirm('Reject this request?')">Reject</a>
+                                                        </form>
+                                                    </t>
+                                                    <small class="text-muted d-block">
+                                                        <t t-esc="request.request_date.strftime('%Y-%m-%d')"/>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <t t-if="not received_requests">
+                                    <div class="text-center py-5">
+                                        <h4>No requests received yet</h4>
+                                        <p class="text-muted">Add more items to receive swap requests!</p>
+                                        <a href="/add-item" class="btn btn-primary">Add New Item</a>
+                                    </div>
+                                </t>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+    </data>
+</odoo>

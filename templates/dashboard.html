@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Clothing Swap Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1>Welcome back, {{ current_user.username }}!</h1>
+        </div>
+    </div>
+    
+    <!-- Profile Overview -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h4><i class="fas fa-coins me-2"></i>{{ current_user.points_balance }}</h4>
+                    <p class="card-text">Points Balance</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h4><i class="fas fa-tshirt me-2"></i>{{ current_user.items|length }}</h4>
+                    <p class="card-text">Items Listed</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <h4><i class="fas fa-exchange-alt me-2"></i>{{ current_user.sent_requests|length }}</h4>
+                    <p class="card-text">Requests Sent</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h4><i class="fas fa-inbox me-2"></i>{{ current_user.received_requests|length }}</h4>
+                    <p class="card-text">Requests Received</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <a href="{{ url_for('add_item') }}" class="btn btn-primary me-2">
+                        <i class="fas fa-plus me-1"></i>Add New Item
+                    </a>
+                    <a href="{{ url_for('browse') }}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-search me-1"></i>Browse Items
+                    </a>
+                    <a href="{{ url_for('my_requests') }}" class="btn btn-outline-warning">
+                        <i class="fas fa-envelope me-1"></i>My Requests
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Items -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">My Recent Items</h5>
+                    <a href="{{ url_for('browse') }}?owner={{ current_user.id }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if my_items %}
+                        {% for item in my_items %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if item.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ item.name }}">
+                            {% else %}
+                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <i class="fas fa-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ item.name }}</h6>
+                                <small class="text-muted">
+                                    <span class="badge bg-{{ 'success' if item.state == 'available' else 'warning' if item.state == 'reserved' else 'secondary' }}">
+                                        {{ item.state.title() }}
+                                    </span>
+                                </small>
+                            </div>
+                            <span class="text-warning fw-bold">{{ item.points_value }}pts</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No items yet. <a href="{{ url_for('add_item') }}">Add your first item!</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Requests -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Requests</h5>
+                    <a href="{{ url_for('my_requests') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if my_requests %}
+                        {% for request in my_requests %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if request.item.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/' + request.item.image_filename) }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="{{ request.item.name }}">
+                            {% else %}
+                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <i class="fas fa-image text-muted"></i>
+                            </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{ request.item.name }}</h6>
+                                <small class="text-muted">
+                                    To: {{ request.item_owner.username }}
+                                </small>
+                            </div>
+                            <span class="badge bg-{{ 'success' if request.state == 'accepted' else 'warning' if request.state == 'pending' else 'danger' if request.state == 'rejected' else 'secondary' }}">
+                                {{ request.state.title() }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No requests yet. <a href="{{ url_for('browse') }}">Start browsing items!</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Item Detail Page -->
+        <template id="item_detail" name="Item Detail">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img t-att-src="'/web/image/clothing.item/%s/image_1920' % item.id" class="img-fluid rounded" alt=""/>
+                                <t t-if="item.image_ids">
+                                    <div class="row mt-3">
+                                        <t t-foreach="item.image_ids" t-as="img">
+                                            <div class="col-3">
+                                                <img t-att-src="'/web/image/clothing.item.image/%s/image_128' % img.id" class="img-fluid rounded" alt=""/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="col-md-6">
+                                <h1><t t-esc="item.name"/></h1>
+                                <p class="lead"><t t-esc="item.description"/></p>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <strong>Category:</strong> <span class="badge bg-primary"><t t-esc="item.category"/></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Size:</strong> <span class="badge bg-secondary"><t t-esc="item.size"/></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <strong>Condition:</strong> <span class="badge bg-success"><t t-esc="item.condition"/></span>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Points Value:</strong> <span class="text-warning fw-bold"><t t-esc="item.points_value"/> points</span>
+                                    </div>
+                                </div>
+                                
+                                <t t-if="item.brand">
+                                    <p><strong>Brand:</strong> <t t-esc="item.brand"/></p>
+                                </t>
+                                <t t-if="item.color">
+                                    <p><strong>Color:</strong> <t t-esc="item.color"/></p>
+                                </t>
+                                <t t-if="item.tags">
+                                    <p><strong>Tags:</strong> <t t-esc="item.tags"/></p>
+                                </t>
+                                
+                                <div class="mb-3">
+                                    <strong>Owner:</strong> <t t-esc="item.owner_id.name"/>
+                                </div>
+                                
+                                <t t-if="can_request">
+                                    <div class="mt-4">
+                                        <h5>Request This Item</h5>
+                                        
+                                        <!-- Swap Request Form -->
+                                        <form action="/item/request" method="post" id="requestForm">
+                                            <input type="hidden" name="item_id" t-att-value="item.id"/>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Request Type:</label>
+                                                <div>
+                                                    <input type="radio" name="request_type" value="swap" id="type_swap" checked="checked"/>
+                                                    <label for="type_swap" class="form-check-label me-3">Item Swap</label>
+                                                    
+                                                    <input type="radio" name="request_type" value="points" id="type_points"/>
+                                                    <label for="type_points" class="form-check-label">Points Redemption</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Swap Option -->
+                                            <div id="swap_section" class="mb-3">
+                                                <label for="offered_item_id" class="form-label">Offer Your Item:</label>
+                                                <select name="offered_item_id" id="offered_item_id" class="form-select">
+                                                    <option value="">Select an item to offer...</option>
+                                                    <t t-foreach="user_items" t-as="user_item">
+                                                        <option t-att-value="user_item.id">
+                                                            <t t-esc="user_item.name"/> (<t t-esc="user_item.size"/>, <t t-esc="user_item.condition"/>)
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                            
+                                            <!-- Points Option -->
+                                            <div id="points_section" class="mb-3" style="display: none;">
+                                                <label for="points_used" class="form-label">Points to Use:</label>
+                                                <input type="number" name="points_used" id="points_used" class="form-control" t-att-value="item.points_value" t-att-max="item.points_value"/>
+                                                <small class="form-text text-muted">
+                                                    Your balance: <t t-esc="user_profile.points_balance if user_profile else 0"/> points
+                                                </small>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label for="message" class="form-label">Message (optional):</label>
+                                                <textarea name="message" id="message" class="form-control" rows="3" placeholder="Add a personal message..."></textarea>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn btn-primary">Send Request</button>
+                                        </form>
+                                    </div>
+                                </t>
+                                
+                                <t t-if="not can_request and not request.env.user._is_public()">
+                                    <div class="alert alert-info mt-4">
+                                        This is your own item.
+                                    </div>
+                                </t>
+                                
+                                <t t-if="request.env.user._is_public()">
+                                    <div class="alert alert-warning mt-4">
+                                        Please <a href="/web/login">login</a> to request this item.
+                                    </div>
+                                </t>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+        <!-- Add Item Form -->
+        <template id="add_item_form" name="Add New Item">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container mt-4">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <h1>Add New Item</h1>
+                                <p class="lead">List your clothing item for swapping</p>
+                                
+                                <form action="/add-item/submit" method="post" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label">Main Image *</label>
+                                        <input type="file" name="image" id="image" class="form-control" accept="image/*" required="required"/>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Title *</label>
+                                        <input type="text" name="name" id="name" class="form-control" required="required" placeholder="e.g., Vintage Leather Jacket"/>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description *</label>
+                                        <textarea name="description" id="description" class="form-control" rows="4" required="required" placeholder="Describe the item, its features, and condition..."></textarea>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="category" class="form-label">Category *</label>
+                                            <select name="category" id="category" class="form-select" required="required">
+                                                <option value="">Select category...</option>
+                                                <t t-foreach="categories" t-as="cat">
+                                                    <option t-att-value="cat[0]"><t t-esc="cat[1]"/></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="size" class="form-label">Size *</label>
+                                            <select name="size" id="size" class="form-select" required="required">
+                                                <option value="">Select size...</option>
+                                                <t t-foreach="sizes" t-as="sz">
+                                                    <option t-att-value="sz[0]"><t t-esc="sz[1]"/></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="condition" class="form-label">Condition *</label>
+                                            <select name="condition" id="condition" class="form-select" required="required">
+                                                <option value="">Select condition...</option>
+                                                <t t-foreach="conditions" t-as="cond">
+                                                    <option t-att-value="cond[0]"><t t-esc="cond[1]"/></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="brand" class="form-label">Brand</label>
+                                            <input type="text" name="brand" id="brand" class="form-control" placeholder="e.g., Nike, Zara, H&amp;M"/>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="color" class="form-label">Color</label>
+                                            <input type="text" name="color" id="color" class="form-control" placeholder="e.g., Black, Blue, Red"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tags" class="form-label">Tags</label>
+                                            <input type="text" name="tags" id="tags" class="form-control" placeholder="e.g., vintage, casual, formal"/>
+                                            <small class="form-text text-muted">Comma-separated tags</small>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="points_value" class="form-label">Points Value</label>
+                                            <input type="number" name="points_value" id="points_value" class="form-control" value="10" min="1" max="100"/>
+                                            <small class="form-text text-muted">Points needed to redeem this item</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary btn-lg">Submit for Approval</button>
+                                        <a href="/my/dashboard" class="btn btn-secondary">Cancel</a>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+    </data>
+</odoo>

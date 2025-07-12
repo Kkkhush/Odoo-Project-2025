@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Clothing Item Views -->
+        <record id="clothing_item_tree_view" model="ir.ui.view">
+            <field name="name">clothing.item.tree</field>
+            <field name="model">clothing.item</field>
+            <field name="arch" type="xml">
+                <tree string="Clothing Items">
+                    <field name="image_128" widget="image" class="oe_avatar"/>
+                    <field name="name"/>
+                    <field name="category"/>
+                    <field name="size"/>
+                    <field name="condition"/>
+                    <field name="owner_id"/>
+                    <field name="state" decoration-success="state == 'available'" decoration-warning="state == 'pending'" decoration-danger="state == 'rejected'"/>
+                    <field name="points_value"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="clothing_item_form_view" model="ir.ui.view">
+            <field name="name">clothing.item.form</field>
+            <field name="model">clothing.item</field>
+            <field name="arch" type="xml">
+                <form string="Clothing Item">
+                    <header>
+                        <button name="action_submit_for_approval" type="object" string="Submit for Approval" states="draft" class="btn-primary"/>
+                        <button name="action_approve" type="object" string="Approve" states="pending" class="btn-success"/>
+                        <button name="action_reject" type="object" string="Reject" states="pending" class="btn-danger"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,available,swapped"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_swap_requests" type="object" class="oe_stat_button" icon="fa-exchange">
+                                <field name="swap_request_count" widget="statinfo" string="Requests"/>
+                            </button>
+                        </div>
+                        <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Item Title"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="category"/>
+                                <field name="size"/>
+                                <field name="condition"/>
+                                <field name="brand"/>
+                                <field name="color"/>
+                            </group>
+                            <group>
+                                <field name="owner_id"/>
+                                <field name="points_value"/>
+                                <field name="tags"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="approval_date" readonly="1" attrs="{'invisible': [('approval_date', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                            <page string="Additional Images">
+                                <field name="image_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="image_128" widget="image" class="oe_avatar"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Swap Requests">
+                                <field name="swap_request_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="requester_id"/>
+                                        <field name="request_type"/>
+                                        <field name="state"/>
+                                        <field name="request_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="clothing_item_search_view" model="ir.ui.view">
+            <field name="name">clothing.item.search</field>
+            <field name="model">clothing.item</field>
+            <field name="arch" type="xml">
+                <search string="Search Clothing Items">
+                    <field name="name"/>
+                    <field name="owner_id"/>
+                    <field name="category"/>
+                    <field name="brand"/>
+                    <filter name="available" string="Available" domain="[('state', '=', 'available')]"/>
+                    <filter name="pending" string="Pending Approval" domain="[('state', '=', 'pending')]"/>
+                    <filter name="swapped" string="Swapped" domain="[('state', '=', 'swapped')]"/>
+                    <separator/>
+                    <filter name="my_items" string="My Items" domain="[('owner_id', '=', uid)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_category" domain="[]" context="{'group_by': 'category'}"/>
+                        <filter string="Size" name="group_size" domain="[]" context="{'group_by': 'size'}"/>
+                        <filter string="Owner" name="group_owner" domain="[]" context="{'group_by': 'owner_id'}"/>
+                        <filter string="State" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="clothing_item_kanban_view" model="ir.ui.view">
+            <field name="name">clothing.item.kanban</field>
+            <field name="model">clothing.item</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="image_128"/>
+                    <field name="category"/>
+                    <field name="size"/>
+                    <field name="owner_id"/>
+                    <field name="points_value"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('clothing.item', 'image_128', record.id.raw_value)" alt="Item"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
+                                    <div class="o_kanban_record_subtitle">
+                                        <t t-esc="record.category.value"/> - <t t-esc="record.size.value"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left">
+                                            <span class="o_kanban_record_subtitle"><t t-esc="record.owner_id.value"/></span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <span class="badge badge-pill"><t t-esc="record.points_value.value"/>pts</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Main Menu -->
+        <menuitem id="clothing_swap_main_menu"
+                  name="Clothing Swap"
+                  web_icon="clothing_swap,static/description/icon.png"
+                  sequence="10"/>
+        
+        <!-- Items Menu -->
+        <menuitem id="clothing_swap_items_menu"
+                  name="Items"
+                  parent="clothing_swap_main_menu"
+                  sequence="10"/>
+        
+        <record id="clothing_item_action" model="ir.actions.act_window">
+            <field name="name">Clothing Items</field>
+            <field name="res_model">clothing.item</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first clothing item!
+                </p>
+                <p>
+                    Items are the heart of the clothing swap platform. Users can list their clothing items for swapping.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="clothing_item_menu"
+                  name="All Items"
+                  parent="clothing_swap_items_menu"
+                  action="clothing_item_action"
+                  sequence="10"/>
+        
+        <record id="clothing_item_pending_action" model="ir.actions.act_window">
+            <field name="name">Pending Approval</field>
+            <field name="res_model">clothing.item</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'pending')]</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <menuitem id="clothing_item_pending_menu"
+                  name="Pending Approval"
+                  parent="clothing_swap_items_menu"
+                  action="clothing_item_pending_action"
+                  sequence="20"/>
+        
+        <!-- Requests Menu -->
+        <menuitem id="clothing_swap_requests_menu"
+                  name="Swap Requests"
+                  parent="clothing_swap_main_menu"
+                  sequence="20"/>
+        
+        <record id="swap_request_action" model="ir.actions.act_window">
+            <field name="name">Swap Requests</field>
+            <field name="res_model">swap.request</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No swap requests yet!
+                </p>
+                <p>
+                    Swap requests are created when users want to exchange items or redeem them with points.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="swap_request_menu"
+                  name="All Requests"
+                  parent="clothing_swap_requests_menu"
+                  action="swap_request_action"
+                  sequence="10"/>
+        
+        <record id="swap_request_pending_action" model="ir.actions.act_window">
+            <field name="name">Pending Requests</field>
+            <field name="res_model">swap.request</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state', '=', 'pending')]</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <menuitem id="swap_request_pending_menu"
+                  name="Pending Requests"
+                  parent="clothing_swap_requests_menu"
+                  action="swap_request_pending_action"
+                  sequence="20"/>
+        
+        <!-- Users Menu -->
+        <menuitem id="clothing_swap_users_menu"
+                  name="Users"
+                  parent="clothing_swap_main_menu"
+                  sequence="30"/>
+        
+        <record id="user_profile_action" model="ir.actions.act_window">
+            <field name="name">User Profiles</field>
+            <field name="res_model">user.profile</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No user profiles yet!
+                </p>
+                <p>
+                    User profiles contain information about clothing swap participants, including their points balance and swap history.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="user_profile_menu"
+                  name="User Profiles"
+                  parent="clothing_swap_users_menu"
+                  action="user_profile_action"
+                  sequence="10"/>
+        
+        <!-- Configuration Menu -->
+        <menuitem id="clothing_swap_config_menu"
+                  name="Configuration"
+                  parent="clothing_swap_main_menu"
+                  sequence="90"
+                  groups="clothing_swap.group_clothing_swap_admin"/>
+        
+        <!-- Website Menu Items -->
+        <record id="website_menu_clothing_swap" model="website.menu">
+            <field name="name">Clothing Swap</field>
+            <field name="url">/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="website_menu_browse" model="website.menu">
+            <field name="name">Browse Items</field>
+            <field name="url">/browse</field>
+            <field name="parent_id" ref="website_menu_clothing_swap"/>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="website_menu_add_item" model="website.menu">
+            <field name="name">Add Item</field>
+            <field name="url">/add-item</field>
+            <field name="parent_id" ref="website_menu_clothing_swap"/>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="website_menu_dashboard" model="website.menu">
+            <field name="name">My Dashboard</field>
+            <field name="url">/my/dashboard</field>
+            <field name="parent_id" ref="website_menu_clothing_swap"/>
+            <field name="sequence">30</field>
+        </record>
+        
+    </data>
+</odoo>

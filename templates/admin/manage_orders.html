@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Admin Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="admin-header bg-white rounded shadow-sm p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h1 class="h3 mb-0 text-dark fw-bold">Admin Panel</h1>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search orders..." id="orderSearch">
+                            <button class="btn btn-outline-secondary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <div class="admin-profile">
+                            <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white" style="width: 40px; height: 40px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="admin-nav bg-white rounded shadow-sm">
+                <nav class="nav nav-pills nav-fill">
+                    <a class="nav-link" href="{{ url_for('admin_users') }}">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                    <a class="nav-link active" href="{{ url_for('admin_orders') }}">
+                        <i class="fas fa-exchange-alt me-2"></i>Manage Orders
+                    </a>
+                    <a class="nav-link" href="{{ url_for('admin_listings') }}">
+                        <i class="fas fa-list me-2"></i>Manage Listings
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="admin-content bg-white rounded shadow-sm p-4">
+                <h4 class="fw-bold mb-4">Manage Orders</h4>
+                
+                <!-- Orders List -->
+                <div class="orders-list">
+                    {% for order in orders %}
+                    <div class="order-item border rounded p-3 mb-3">
+                        <div class="row align-items-center">
+                            <!-- Order Icon -->
+                            <div class="col-md-1">
+                                <div class="order-icon bg-success rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 60px; height: 60px;">
+                                    <i class="fas fa-exchange-alt fa-lg"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Details -->
+                            <div class="col-md-8">
+                                <div class="order-details bg-light rounded p-3">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="fw-bold mb-1">Swap Request #{{ order.id }}</h6>
+                                            <p class="text-muted mb-1">Requester: {{ order.requester.username }}</p>
+                                            <p class="text-muted mb-1">Item Owner: {{ order.item_owner.username }}</p>
+                                            <small class="text-muted">Created: {{ order.created_at.strftime('%B %d, %Y') }}</small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-1"><strong>Item:</strong> {{ order.item.name }}</p>
+                                            <p class="mb-1"><strong>Message:</strong> {{ order.message[:50] }}...</p>
+                                            {% if order.state == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                            {% elif order.state == 'accepted' %}
+                                            <span class="badge bg-success">Accepted</span>
+                                            {% elif order.state == 'rejected' %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="col-md-3">
+                                <div class="order-actions d-flex flex-column gap-2">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="viewOrderDetails({{ order.id }})">
+                                        <i class="fas fa-eye me-1"></i>Actions 1
+                                    </button>
+                                    <button class="btn btn-outline-warning btn-sm" onclick="moderateOrder({{ order.id }})">
+                                        <i class="fas fa-gavel me-1"></i>Action 2
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.admin-header {
+    border-left: 4px solid #667eea;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0;
+    color: #6c757d;
+    background: transparent;
+    padding: 1rem 1.5rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #f8f9fa;
+    border-bottom-color: #667eea;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #667eea;
+    color: white;
+    border-bottom-color: #667eea;
+}
+
+.order-item {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef !important;
+}
+
+.order-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.order-icon {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.order-details {
+    border: 1px solid #dee2e6;
+}
+</style>
+
+<script>
+function viewOrderDetails(orderId) {
+    alert('View details for order ID: ' + orderId);
+}
+
+function moderateOrder(orderId) {
+    alert('Moderate order ID: ' + orderId);
+}
+</script>
+{% endblock %}

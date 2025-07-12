@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Add Item - Clothing Swap Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1>Add New Item</h1>
+            <p class="lead">List your clothing item for swapping</p>
+            
+            <form action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="image" class="form-label">Main Image *</label>
+                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="name" class="form-label">Title *</label>
+                    <input type="text" name="name" id="name" class="form-control" required placeholder="e.g., Vintage Leather Jacket">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description *</label>
+                    <textarea name="description" id="description" class="form-control" rows="4" required placeholder="Describe the item, its features, and condition..."></textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="category" class="form-label">Category *</label>
+                        <select name="category" id="category" class="form-select" required>
+                            <option value="">Select category...</option>
+                            {% for category in categories %}
+                            <option value="{{ category }}">{{ category.title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="size" class="form-label">Size *</label>
+                        <select name="size" id="size" class="form-select" required>
+                            <option value="">Select size...</option>
+                            {% for size in sizes %}
+                            <option value="{{ size }}">{{ size.upper() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="condition" class="form-label">Condition *</label>
+                        <select name="condition" id="condition" class="form-select" required>
+                            <option value="">Select condition...</option>
+                            {% for condition in conditions %}
+                            <option value="{{ condition }}">{{ condition.title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input type="text" name="brand" id="brand" class="form-control" placeholder="e.g., Nike, Zara, H&M">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="color" class="form-label">Color</label>
+                        <input type="text" name="color" id="color" class="form-control" placeholder="e.g., Black, Blue, Red">
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="points_value" class="form-label">Points Value</label>
+                        <input type="number" name="points_value" id="points_value" class="form-control" value="10" min="1" max="100">
+                        <small class="form-text text-muted">Points needed to redeem this item</small>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary btn-lg">Add Item</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#image').change(function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#image-preview').remove();
+                $('#image').after('<div id="image-preview" class="mt-2"><img src="' + e.target.result + '" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;"></div>');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+{% endblock %}

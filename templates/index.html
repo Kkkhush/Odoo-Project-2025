@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section with Images -->
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h1 class="display-4 fw-bold text-white mb-4">Swap Your Style, Save the Planet</h1>
+                <p class="lead text-white mb-4">Join our community of fashion-conscious individuals who believe in sustainable style.</p>
+            </div>
+        </div>
+        
+        <!-- Hero Images Section -->
+        <div class="row">
+            <div class="col-12">
+                <div class="hero-images-container bg-white rounded p-4 shadow-lg">
+                    <div class="row g-3">
+                        {% for item in featured_items[:6] %}
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <div class="hero-image-card">
+                                {% if item.image_filename %}
+                                <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="img-fluid rounded" alt="{{ item.name }}" style="height: 120px; width: 100%; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px;">
+                                    <i class="fas fa-tshirt fa-2x text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div class="text-center mt-2">
+                                    <small class="text-muted">{{ item.name[:15] }}...</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- Fill remaining slots if fewer than 6 items -->
+                        {% for i in range(6 - featured_items|length) %}
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <div class="hero-image-card">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 120px;">
+                                    <i class="fas fa-plus fa-2x text-muted"></i>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <small class="text-muted">Add Item</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="fw-bold">Categories Section</h2>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('browse', category='tops') }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
+                        <i class="fas fa-tshirt fa-3x text-primary mb-3"></i>
+                        <h5 class="fw-bold text-dark">Tops</h5>
+                        <p class="text-muted mb-0">Shirts, Blouses, T-shirts</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('browse', category='bottoms') }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
+                        <i class="fas fa-user-tie fa-3x text-success mb-3"></i>
+                        <h5 class="fw-bold text-dark">Bottoms</h5>
+                        <p class="text-muted mb-0">Pants, Jeans, Shorts</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('browse', category='dresses') }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
+                        <i class="fas fa-female fa-3x text-warning mb-3"></i>
+                        <h5 class="fw-bold text-dark">Dresses</h5>
+                        <p class="text-muted mb-0">Casual, Formal, Party</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('browse', category='outerwear') }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
+                        <i class="fas fa-coat-arms fa-3x text-info mb-3"></i>
+                        <h5 class="fw-bold text-dark">Outerwear</h5>
+                        <p class="text-muted mb-0">Jackets, Coats, Hoodies</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('browse', category='shoes') }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
+                        <i class="fas fa-shoe-prints fa-3x text-danger mb-3"></i>
+                        <h5 class="fw-bold text-dark">Shoes</h5>
+                        <p class="text-muted mb-0">Sneakers, Boots, Heels</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="{{ url_for('browse', category='accessories') }}" class="text-decoration-none">
+                    <div class="category-card bg-white rounded shadow-sm p-4 h-100 text-center">
+                        <i class="fas fa-gem fa-3x text-purple mb-3"></i>
+                        <h5 class="fw-bold text-dark">Accessories</h5>
+                        <p class="text-muted mb-0">Bags, Jewelry, Hats</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Listings Section -->
+<section class="product-listings py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="fw-bold">Product Listings</h2>
+                <p class="text-muted">Featured items from our community</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for item in featured_items[:4] %}
+            <div class="col-lg-3 col-md-6">
+                <div class="product-card bg-white rounded shadow-sm overflow-hidden h-100">
+                    {% if item.image_filename %}
+                    <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" class="card-img-top" alt="{{ item.name }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <i class="fas fa-image fa-3x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-2">{{ item.name }}</h5>
+                        <p class="card-text text-muted small mb-3">{{ item.description[:60] }}...</p>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary">{{ item.category.title() }}</span>
+                            <span class="badge bg-secondary">{{ item.size.upper() }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-warning fw-bold">{{ item.points_value }} pts</span>
+                            <a href="{{ url_for('item_detail', item_id=item.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Fill remaining slots if fewer than 4 items -->
+            {% for i in range(4 - (featured_items[:4]|length)) %}
+            <div class="col-lg-3 col-md-6">
+                <div class="product-card bg-white rounded shadow-sm overflow-hidden h-100">
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <div class="text-center">
+                            <i class="fas fa-plus fa-3x text-muted mb-2"></i>
+                            <p class="text-muted mb-0">Add Your Item</p>
+                        </div>
+                    </div>
+                    <div class="card-body p-3">
+                        <h5 class="card-title mb-2">List Your Item</h5>
+                        <p class="card-text text-muted small mb-3">Share your clothes with the community</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('add_item') if current_user.is_authenticated else url_for('register') }}" class="btn btn-primary btn-sm">Get Started</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('browse') }}" class="btn btn-primary btn-lg">Browse All Items</a>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-5 fw-bold">How It Works</h2>
+                <p class="lead">Simple steps to start swapping</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-user-plus fa-2x"></i>
+                    </div>
+                    <h4>1. Sign Up</h4>
+                    <p>Create your account and get 50 welcome points</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="step-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-plus fa-2x"></i>
+                    </div>
+                    <h4>2. List Items</h4>
+                    <p>Upload photos and details of clothes you want to swap</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="step-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-exchange-alt fa-2x"></i>
+                    </div>
+                    <h4>3. Browse & Swap</h4>
+                    <p>Find items you love and propose swaps or use points</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="text-center">
+                    <div class="step-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <i class="fas fa-star fa-2x"></i>
+                    </div>
+                    <h4>4. Earn Points</h4>
+                    <p>Get points for successful swaps and redeem them later</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

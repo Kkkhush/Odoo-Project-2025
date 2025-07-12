@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- User Profile Views -->
+        <record id="user_profile_tree_view" model="ir.ui.view">
+            <field name="name">user.profile.tree</field>
+            <field name="model">user.profile</field>
+            <field name="arch" type="xml">
+                <tree string="User Profiles">
+                    <field name="user_id"/>
+                    <field name="points_balance"/>
+                    <field name="total_items_listed"/>
+                    <field name="total_swaps_completed"/>
+                    <field name="total_points_earned"/>
+                    <field name="average_rating"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="user_profile_form_view" model="ir.ui.view">
+            <field name="name">user.profile.form</field>
+            <field name="model">user.profile</field>
+            <field name="arch" type="xml">
+                <form string="User Profile">
+                    <sheet>
+                        <field name="avatar" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="user_id"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Points &amp; Statistics">
+                                <field name="points_balance"/>
+                                <field name="total_points_earned"/>
+                                <field name="total_points_spent"/>
+                                <field name="total_items_listed"/>
+                                <field name="total_swaps_completed"/>
+                                <field name="average_rating"/>
+                                <field name="total_ratings"/>
+                            </group>
+                            <group string="Profile Information">
+                                <field name="location"/>
+                                <field name="preferred_brands"/>
+                                <field name="preferred_sizes"/>
+                                <field name="preferred_categories"/>
+                            </group>
+                        </group>
+                        <group string="Bio">
+                            <field name="bio" nolabel="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Listed Items">
+                                <field name="items_listed_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="category"/>
+                                        <field name="state"/>
+                                        <field name="points_value"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Requests Made">
+                                <field name="swap_requests_made_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="item_id"/>
+                                        <field name="request_type"/>
+                                        <field name="state"/>
+                                        <field name="request_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Requests Received">
+                                <field name="swap_requests_received_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="requester_id"/>
+                                        <field name="item_id"/>
+                                        <field name="request_type"/>
+                                        <field name="state"/>
+                                        <field name="request_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record id="user_profile_search_view" model="ir.ui.view">
+            <field name="name">user.profile.search</field>
+            <field name="model">user.profile</field>
+            <field name="arch" type="xml">
+                <search string="Search User Profiles">
+                    <field name="user_id"/>
+                    <field name="location"/>
+                    <filter name="high_points" string="High Points (>100)" domain="[('points_balance', '>', 100)]"/>
+                    <filter name="active_users" string="Active Users (>5 items)" domain="[('total_items_listed', '>', 5)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Location" name="group_location" domain="[]" context="{'group_by': 'location'}"/>
+                        <filter string="Points Range" name="group_points" domain="[]" context="{'group_by': 'points_balance'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

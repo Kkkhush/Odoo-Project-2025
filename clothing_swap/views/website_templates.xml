@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Landing Page -->
+        <template id="landing_page" name="Clothing Swap - Home">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    
+                    <!-- Hero Section -->
+                    <section class="hero-section bg-primary text-white py-5">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <h1 class="display-4 fw-bold mb-4">Swap Your Style, Save the Planet</h1>
+                                    <p class="lead mb-4">Join our community of fashion-conscious individuals who believe in sustainable style. Swap clothes, earn points, and discover unique pieces while reducing fashion waste.</p>
+                                    <div class="d-flex gap-3 flex-wrap">
+                                        <a href="/browse" class="btn btn-light btn-lg">Browse Items</a>
+                                        <a href="/add-item" class="btn btn-outline-light btn-lg">List an Item</a>
+                                        <a href="/my/dashboard" class="btn btn-success btn-lg">Start Swapping</a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <img src="/clothing_swap/static/src/img/hero-image.jpg" alt="Clothing Swap" class="img-fluid rounded"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Statistics Section -->
+                    <section class="stats-section py-5 bg-light">
+                        <div class="container">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <h3 class="display-4 text-primary fw-bold"><t t-esc="total_items"/></h3>
+                                        <p class="lead">Items Available</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <h3 class="display-4 text-success fw-bold"><t t-esc="total_users"/></h3>
+                                        <p class="lead">Active Members</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <h3 class="display-4 text-warning fw-bold"><t t-esc="total_swaps"/></h3>
+                                        <p class="lead">Successful Swaps</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Featured Items -->
+                    <section class="featured-items py-5">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12 text-center mb-5">
+                                    <h2 class="display-5 fw-bold">Featured Items</h2>
+                                    <p class="lead">Discover the latest additions to our swap community</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <t t-foreach="featured_items" t-as="item">
+                                    <div class="col-lg-4 col-md-6 mb-4">
+                                        <div class="card h-100 shadow-sm">
+                                            <img t-att-src="'/web/image/clothing.item/%s/image_128' % item.id" class="card-img-top" alt="" style="height: 250px; object-fit: cover;"/>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><t t-esc="item.name"/></h5>
+                                                <p class="card-text text-muted"><t t-esc="item.description[:100]"/>...</p>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <span class="badge bg-primary"><t t-esc="item.category"/></span>
+                                                    <span class="badge bg-secondary"><t t-esc="item.size"/></span>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="text-warning fw-bold"><t t-esc="item.points_value"/> points</span>
+                                                    <a t-att-href="'/item/%s' % item.id" class="btn btn-outline-primary btn-sm">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="text-center mt-4">
+                                <a href="/browse" class="btn btn-primary btn-lg">Browse All Items</a>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- How It Works -->
+                    <section class="how-it-works py-5 bg-light">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12 text-center mb-5">
+                                    <h2 class="display-5 fw-bold">How It Works</h2>
+                                    <p class="lead">Simple steps to start swapping</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-6 mb-4">
+                                    <div class="text-center">
+                                        <div class="step-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user-plus fa-2x"></i>
+                                        </div>
+                                        <h4>1. Sign Up</h4>
+                                        <p>Create your account and get 50 welcome points</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 mb-4">
+                                    <div class="text-center">
+                                        <div class="step-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-plus fa-2x"></i>
+                                        </div>
+                                        <h4>2. List Items</h4>
+                                        <p>Upload photos and details of clothes you want to swap</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 mb-4">
+                                    <div class="text-center">
+                                        <div class="step-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-exchange-alt fa-2x"></i>
+                                        </div>
+                                        <h4>3. Browse &amp; Swap</h4>
+                                        <p>Find items you love and propose swaps or use points</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 mb-4">
+                                    <div class="text-center">
+                                        <div class="step-icon bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-star fa-2x"></i>
+                                        </div>
+                                        <h4>4. Earn Points</h4>
+                                        <p>Get points for successful swaps and redeem them later</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                </div>
+            </t>
+        </template>
+        
+        <!-- Browse Items Page -->
+        <template id="browse_items" name="Browse Items">
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <h1 class="mb-4">Browse Items</h1>
+                                
+                                <!-- Filters -->
+                                <form method="get" class="mb-4">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input type="text" name="search" class="form-control" placeholder="Search items..." t-att-value="search"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <select name="category" class="form-select">
+                                                <option value="">All Categories</option>
+                                                <t t-foreach="categories" t-as="cat">
+                                                    <option t-att-value="cat[0]" t-att-selected="'selected' if category == cat[0] else None">
+                                                        <t t-esc="cat[1]"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <select name="size" class="form-select">
+                                                <option value="">All Sizes</option>
+                                                <t t-foreach="sizes" t-as="sz">
+                                                    <option t-att-value="sz[0]" t-att-selected="'selected' if size == sz[0] else None">
+                                                        <t t-esc="sz[1]"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <select name="condition" class="form-select">
+                                                <option value="">All Conditions</option>
+                                                <t t-foreach="conditions" t-as="cond">
+                                                    <option t-att-value="cond[0]" t-att-selected="'selected' if condition == cond[0] else None">
+                                                        <t t-esc="cond[1]"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button type="submit" class="btn btn-primary">Filter</button>
+                                            <a href="/browse" class="btn btn-outline-secondary">Clear</a>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                <!-- Items Grid -->
+                                <div class="row">
+                                    <t t-foreach="items" t-as="item">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                            <div class="card h-100">
+                                                <img t-att-src="'/web/image/clothing.item/%s/image_128' % item.id" class="card-img-top" alt="" style="height: 200px; object-fit: cover;"/>
+                                                <div class="card-body d-flex flex-column">
+                                                    <h5 class="card-title"><t t-esc="item.name"/></h5>
+                                                    <p class="card-text flex-grow-1"><t t-esc="item.description[:80]"/>...</p>
+                                                    <div class="mb-2">
+                                                        <span class="badge bg-primary me-1"><t t-esc="item.category"/></span>
+                                                        <span class="badge bg-secondary me-1"><t t-esc="item.size"/></span>
+                                                        <span class="badge bg-success"><t t-esc="item.condition"/></span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span class="text-warning fw-bold"><t t-esc="item.points_value"/> points</span>
+                                                        <a t-att-href="'/item/%s' % item.id" class="btn btn-outline-primary btn-sm">View</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                                
+                                <!-- Pagination -->
+                                <t t-if="total_pages > 1">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            <t t-if="current_page > 1">
+                                                <li class="page-item">
+                                                    <a class="page-link" t-att-href="'/browse?page=%s&amp;search=%s&amp;category=%s&amp;size=%s&amp;condition=%s' % (current_page - 1, search, category, size, condition)">Previous</a>
+                                                </li>
+                                            </t>
+                                            <t t-foreach="range(1, total_pages + 1)" t-as="page_num">
+                                                <li t-att-class="'page-item active' if page_num == current_page else 'page-item'">
+                                                    <a class="page-link" t-att-href="'/browse?page=%s&amp;search=%s&amp;category=%s&amp;size=%s&amp;condition=%s' % (page_num, search, category, size, condition)">
+                                                        <t t-esc="page_num"/>
+                                                    </a>
+                                                </li>
+                                            </t>
+                                            <t t-if="current_page &lt; total_pages">
+                                                <li class="page-item">
+                                                    <a class="page-link" t-att-href="'/browse?page=%s&amp;search=%s&amp;category=%s&amp;size=%s&amp;condition=%s' % (current_page + 1, search, category, size, condition)">Next</a>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </nav>
+                                </t>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+    </data>
+</odoo>

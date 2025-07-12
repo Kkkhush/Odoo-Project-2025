@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_clothing_item_user,clothing.item.user,model_clothing_item,group_clothing_swap_user,1,0,1,0
+access_clothing_item_admin,clothing.item.admin,model_clothing_item,group_clothing_swap_admin,1,1,1,1
+access_clothing_item_public,clothing.item.public,model_clothing_item,,1,0,0,0
+access_clothing_item_image_user,clothing.item.image.user,model_clothing_item_image,group_clothing_swap_user,1,1,1,1
+access_clothing_item_image_public,clothing.item.image.public,model_clothing_item_image,,1,0,0,0
+access_swap_request_user,swap.request.user,model_swap_request,group_clothing_swap_user,1,1,1,1
+access_swap_request_admin,swap.request.admin,model_swap_request,group_clothing_swap_admin,1,1,1,1
+access_user_profile_user,user.profile.user,model_user_profile,group_clothing_swap_user,1,1,1,0
+access_user_profile_admin,user.profile.admin,model_user_profile,group_clothing_swap_admin,1,1,1,1
+access_user_profile_public,user.profile.public,model_user_profile,,1,0,0,0

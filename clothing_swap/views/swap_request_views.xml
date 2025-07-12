@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Swap Request Views -->
+        <record id="swap_request_tree_view" model="ir.ui.view">
+            <field name="name">swap.request.tree</field>
+            <field name="model">swap.request</field>
+            <field name="arch" type="xml">
+                <tree string="Swap Requests">
+                    <field name="name"/>
+                    <field name="requester_id"/>
+                    <field name="owner_id"/>
+                    <field name="item_id"/>
+                    <field name="request_type"/>
+                    <field name="state" decoration-success="state == 'completed'" decoration-warning="state == 'pending'" decoration-danger="state == 'rejected'"/>
+                    <field name="request_date"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="swap_request_form_view" model="ir.ui.view">
+            <field name="name">swap.request.form</field>
+            <field name="model">swap.request</field>
+            <field name="arch" type="xml">
+                <form string="Swap Request">
+                    <header>
+                        <button name="action_submit" type="object" string="Submit" states="draft" class="btn-primary"/>
+                        <button name="action_accept" type="object" string="Accept" states="pending" class="btn-success"/>
+                        <button name="action_reject" type="object" string="Reject" states="pending" class="btn-danger"/>
+                        <button name="action_complete" type="object" string="Complete" states="accepted" class="btn-info"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="pending,accepted" class="btn-secondary"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,accepted,completed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="requester_id"/>
+                                <field name="owner_id"/>
+                                <field name="item_id"/>
+                                <field name="request_type"/>
+                            </group>
+                            <group>
+                                <field name="offered_item_id" attrs="{'invisible': [('request_type', '!=', 'swap')], 'required': [('request_type', '=', 'swap')]}"/>
+                                <field name="points_used" attrs="{'invisible': [('request_type', '!=', 'points')], 'required': [('request_type', '=', 'points')]}"/>
+                                <field name="request_date"/>
+                                <field name="response_date" readonly="1"/>
+                                <field name="completion_date" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Message">
+                            <field name="message" nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="swap_request_search_view" model="ir.ui.view">
+            <field name="name">swap.request.search</field>
+            <field name="model">swap.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Swap Requests">
+                    <field name="name"/>
+                    <field name="requester_id"/>
+                    <field name="owner_id"/>
+                    <field name="item_id"/>
+                    <filter name="pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                    <filter name="accepted" string="Accepted" domain="[('state', '=', 'accepted')]"/>
+                    <filter name="completed" string="Completed" domain="[('state', '=', 'completed')]"/>
+                    <separator/>
+                    <filter name="my_requests" string="My Requests" domain="[('requester_id', '=', uid)]"/>
+                    <filter name="requests_for_me" string="Requests for My Items" domain="[('owner_id', '=', uid)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Requester" name="group_requester" domain="[]" context="{'group_by': 'requester_id'}"/>
+                        <filter string="Owner" name="group_owner" domain="[]" context="{'group_by': 'owner_id'}"/>
+                        <filter string="State" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Request Type" name="group_type" domain="[]" context="{'group_by': 'request_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    </data>
+</odoo>
