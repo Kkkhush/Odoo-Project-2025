@@ -4,11 +4,11 @@ A comprehensive clothing swap platform built with Flask (demo) and a full Odoo m
 
 ## Problem Statement
   - ** ReWear – Community Clothing Exchange
-  - 
+
 ## Team Members 
-   - ** Khushi Choudhary
-   - ** Khushi Dutta
-   - ** Harman Kaur
+   - Khushi Choudhary
+   - Khushi Dutta
+   - Harman Kaur
 
 ## Mail id of team members
 - kkhushichoudharyy036@gmail.com
